@@ -7,7 +7,7 @@ DEPÓSITO:
 
 - Depositar somente valores positivos ## FEITO ##
 - Armazenar o depósito em uma variável  ## Feito ##
-- Exibir dados do depósito em formato de extrato 
+- Exibir dados do depósito em formato de extrato ### FEITO ###
 - Armazenar as informações relacionadas ao depósito como valor, quantidade de depósitos
 etc. ## Feito ##
 
@@ -20,11 +20,28 @@ que não será possível sacar o dinheiro por falta de saldo. ## FEITO ##
 
 EXTRATO:
  - Deve listar todos os depósitos e saques realizados na conta. No fim da
-listagem, deve ser exibido o saldo atual da conta.
+listagem, deve ser exibido o saldo atual da conta. ### FEITO ###
 """
 
 from datetime import datetime
 from tabulate import tabulate
+
+
+sistem_logo="""███████╗██╗███████╗████████╗███████╗███╗   ███╗ █████╗                            
+██╔════╝██║██╔════╝╚══██╔══╝██╔════╝████╗ ████║██╔══██╗                           
+███████╗██║███████╗   ██║   █████╗  ██╔████╔██║███████║                           
+╚════██║██║╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██╔══██║                           
+███████║██║███████║   ██║   ███████╗██║ ╚═╝ ██║██║  ██║                           
+╚══════╝╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝                           
+                                                                                  
+██████╗  █████╗ ███╗   ██╗ ██████╗ █████╗ ██████╗ ██╗ ██████╗      ██╗    ██████╗ 
+██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔══██╗██╔══██╗██║██╔═══██╗    ███║   ██╔═████╗
+██████╔╝███████║██╔██╗ ██║██║     ███████║██████╔╝██║██║   ██║    ╚██║   ██║██╔██║
+██╔══██╗██╔══██║██║╚██╗██║██║     ██╔══██║██╔══██╗██║██║   ██║     ██║   ████╔╝██║
+██████╔╝██║  ██║██║ ╚████║╚██████╗██║  ██║██║  ██║██║╚██████╔╝     ██║██╗╚██████╔╝
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝      ╚═╝╚═╝ ╚═════╝"""
+
+
 
 colorir = {
     "Vermelho":'\033[31m',
@@ -34,7 +51,19 @@ colorir = {
 }
 
 class Operacoes:
-    def sacar(self, valor, saldo, qtd_saque, hora):
+    """_ Classe resposnável por conter as principais funcionalidades do sistema principal. _
+    """
+
+    def sacar(self, valor: float, saldo: float, qtd_saque: int, hora: str) -> None:
+        """_ Método responsável por realizar a operação de saque após fazer algumas validações
+        na conta bancária do usuário. _
+
+        Args:
+            valor (float): _ Representa o valor a ser sacado informado pelo usuário. _
+            saldo (float): _ Representa o saldo atual da conta bancária do usuário. _
+            qtd_saque (int): _ Representa quantas vezes o usuário já realizou a operação de saque no dia. _
+            hora (str): _ Representa o horário no qual foi realizada a operação. _
+        """
         match saldo:
             case 0:
                 print(f'\n{colorir["Vermelho"]}Você não possui saldo suficiente para sacar!{colorir["Fecha_Cor"]}')
@@ -43,41 +72,56 @@ class Operacoes:
                 match valor:
                     case _ as positivo if positivo == 0 or positivo < 0:
                         print(f'\n{colorir["Vermelho"]}Só é permitido valores positivos!{colorir["Fecha_Cor"]}')
+                    
+                    case _ as quantidade if quantidade > 500:
+                        print(f'\n{colorir["Vermelho"]}Só é permitido sacar valores até R$500,00. Tente novamente!{colorir["Fecha_Cor"]}')
 
                     case _ as quantidade if quantidade > 0 and quantidade <= 500 and saldo > 0 and qtd_saque < 3:
                         self.saldo -= valor
                         self.dados_extrato["Quantidade de Saques"][0] += 1
                         self.dados_extrato["Informações dos Saques"]["Valores"].append(valor)
                         self.dados_extrato["Informações dos Saques"]["Horários"].append(hora)
-                        print(self.saldo)
-                        print(self.dados_extrato["Quantidade de Saques"])
-                        print(self.dados_extrato["Informações dos Saques"]["Valores"])
-                        print(self.dados_extrato["Informações dos Saques"]["Horários"])
-                    
-                    case _ as quantidade if quantidade > 500:
-                        print(f'\n{colorir["Vermelho"]}Só é permitido sacar valores até R$500,00. Tente novamente!{colorir["Fecha_Cor"]}')
+                        print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi sacado com sucesso! Saldo atual: => R$ {self.saldo} <={colorir["Fecha_Cor"]}')
+                        input('Pressione qualquer tecla para voltar ao menu inicial...')   
             
                     case _:
                         print(f'\n{colorir["Vermelho"]}Você já atingiu o limite de saques diários, volte amanhã!{colorir["Fecha_Cor"]}')
+
+                    
             
 
-    def depositar(self, valor, hora):
+    def depositar(self, valor: float, hora: str) -> None:
+        """_ Método responsável por realizar depósito de valores na conta do usuário
+         após fazer algumas validações. _
+
+        Args:
+            valor (float): _ Representa o valor a ser depositado informado pelo usuário. _
+            hora (str): _ Representa o horário no qual foi realizado a operação de depósito. _
+        """
         match valor:
 
             case _ as valor_invalido if valor_invalido == 0 or valor_invalido < 0:
                 print(f'\n{colorir["Vermelho"]}Só é permitido depositar valores positivos!{colorir["Fecha_Cor"]}')
 
             case _ as quantidade if quantidade >= 1:
+                saldo_anterior=self.saldo
                 self.saldo += valor
                 self.dados_extrato["Quantidade de Depósitos"][0] += 1
                 self.dados_extrato["Informações dos Depósitos"]["Valores"].append(valor)
                 self.dados_extrato["Informações dos Depósitos"]["Horários"].append(hora)
-                print(self.saldo)
-                print(self.dados_extrato["Quantidade de Depósitos"])
-                print(self.dados_extrato["Informações dos Depósitos"]["Valores"])
-                print(self.dados_extrato["Informações dos Depósitos"]["Horários"])
+                print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi depositado com sucesso! Confira abaixo os detalhes da operação.{colorir["Fecha_Cor"]}\n')
+                print(tabulate({"Saldo Anterior": [saldo_anterior],
+                                "Saldo atual":[self.saldo],
+                                "Valor depositado":[valor],
+                                "Horário do Depósito":[hora]
+                                }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+                input('Pressione qualquer tecla para voltar ao menu inicial...')
+                saldo_anterior = ''
     
-    def extrato_deposito(self):
+    def extrato_deposito(self) -> None:
+        """Método responsável por apresentar na tela um extrato contendo todas as operações
+        realizadas pelo usuário de forma detalhada.
+        """
         data = datetime.today()
         dia = data.date().strftime("%d/%m/%Y")
         print()
@@ -91,12 +135,21 @@ class Operacoes:
                                            "Horários dos Depósitos":self.dados_extrato["Informações dos Depósitos"]["Horários"]
                                            }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
         print()
+        print(f'Seu saldo atual é de: => R$ {self.saldo:.2f} <=\n')
         input('Pressione qualquer tecla para voltar ao menu!')
 
 
 
 
 class Sistema_Bancario(Operacoes):
+    """_ Classe que representa o sistema principal, contendo todas as características
+     da conta bancária, e valores. Possui também o método para apresentar o menu princial
+      ao usuário. _
+
+    Args:
+        Operacoes (_Class_): _ Classe repassada por herança que contêm todos os métodos utilizados
+         na classe principal. _
+    """
     def __init__(self, menu: list) -> None:
         self.menu = menu
         self.saldo = 0
@@ -109,6 +162,13 @@ class Sistema_Bancario(Operacoes):
 
 
     def menu_principal(self) -> str:
+        """_ Método que fornece ao usuário todas as opções
+        do menu principal. _
+
+        Returns:
+            str: _ Retorna uma das opções do menu escolhidas pelo usuário._
+        """
+        print(sistem_logo)
         print('\nSeja bem vindo ao nosso Sistema de Operações Bancárias!\n'
               'Versão 1.0\n')
         print(" MENU ".center(40, '='))
@@ -172,12 +232,24 @@ if __name__ == '__main__':
         resposta_usuario = sistema.menu_principal()
         match resposta_usuario:
             case "Depositar":
-                valor_deposito = float(input('Informe o valor do deposito  R$: '))
-                sistema.depositar(valor_deposito, hora)
+                valor_deposito = input('Informe o valor do deposito  R$: ').strip()
+                try:
+                    valor_deposito = float(valor_deposito)
+                except Exception:
+                    print(f'\n{colorir["Vermelho"]}Digite somente números! Tente novamente.{colorir["Fecha_Cor"]}')
+                    input('Pressione qualquer tecla para voltar ao menu...')
+                else:
+                    sistema.depositar(valor_deposito, hora)
 
             case "Sacar":
-                valor_saque = float(input('Informe o valor do Saque R$: '))
-                sistema.sacar(valor_saque, sistema.saldo, sistema.dados_extrato["Quantidade de Saques"][0], hora)
+                valor_saque = input('Informe o valor do Saque R$: ').strip()
+                try:
+                    valor_saque = float(valor_saque)
+                except Exception:
+                    print(f'\n{colorir["Vermelho"]}Digite somente números! Tente novamente.{colorir["Fecha_Cor"]}')
+                    input('Pressione qualquer tecla para voltar ao menu...')
+                else:
+                    sistema.sacar(valor_saque, sistema.saldo, sistema.dados_extrato["Quantidade de Saques"][0], hora)
             
             case "Gerar Extrato":
                 sistema.extrato_deposito()
