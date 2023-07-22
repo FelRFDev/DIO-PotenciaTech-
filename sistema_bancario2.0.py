@@ -6,7 +6,8 @@ na passagem de argumentos.
 
 * A função de saque deve receber argumentos somente por **Kwargs. #### => FEITO <= ####
 * A função de depósito deve receber os argumentos somente por posição. #### => FEITO <= ####
-* A função de extrato deve receber os argumentos de forma posicional e **kwargs (Argumento posicional: saldo / Argumento Nomeado: Extrato)
+* A função de extrato deve receber os argumentos de forma posicional e **kwargs (Argumento posicional: saldo / Argumento Nomeado: Extrato) #### => FEITO <= ####
+
 
 - Criar duas novas funções: Cadastrar usuário (Cliente) e cadastrar conta bancária!
 
@@ -24,8 +25,16 @@ DICA:
 Ao criar um usuário, o mesmo não terá uma conta vinculada portanto, para criar esse vínculo, filtre a lista de usuários
 de acordo com o cpf informado para cada usuário da lista. Caso encontre, basta vincular a conta ao usuário encontrado.
 
-PAREI NA PARTE EM QUE DEVO CRIAR OS EXTRATOS SOMENTE PARA SAQUE E DEPÓSITO.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Modificações feitas =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+
+Para a função de extrato, foi acrescentado um menu fornecendo mais de um tipo de extrato:
+
+ - Extrato para saques
+ - Extrato para depósitos
+ - Extrato Geral/Completo
+
+As opções são repassadas a função conforme solicitado no exercício.
 
 """
 
@@ -131,17 +140,41 @@ class Operacoes:
                                 }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
                 input('Pressione qualquer tecla para voltar ao menu inicial...')
                 saldo_anterior = ''
-
+ 
     def extrato(self, saldo: float, extrato: int = '') -> None:
         """Método responsável por apresentar na tela um extrato contendo todas as operações
         realizadas pelo usuário de forma detalhada.
         """
         match extrato:
             case 1: #saques
-                pass
+                data = datetime.today()
+                dia = data.date().strftime("%d/%m/%Y")
+                print()
+                print()
+                print(f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Saques realizadas na "
+                      f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
+                print(tabulate({"Quantidade de saques":[self.dados_extrato['Quantidade de Saques'][0]],
+                                "Valores dos Saques":self.dados_extrato['Informações dos Saques']['Valores'],
+                                "Horário dos Saques":self.dados_extrato['Informações dos Saques']['Horários'],
+                                },headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+                print(f'\nSeu saldo atual é de: => R$ {saldo:.2f} <=\n')
+                input('Pressione qualquer tecla para voltar ao menu!')
 
             case 2: #depósitos
-                pass
+                data = datetime.today()
+                dia = data.date().strftime("%d/%m/%Y")
+                print()
+                print()
+                print(f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Depósito realizadas na "
+                      f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
+                print(tabulate({
+                    "Quantidade de Depósitos":[self.dados_extrato['Quantidade de Depósitos'][0]],
+                    "Valores dos Depósitos":self.dados_extrato['Informações dos Depósitos']['Valores'],
+                    "Horário dos Depósitos":self.dados_extrato['Informações dos Depósitos']['Horários'],
+                },headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+
+                print(f'\nSeu saldo atual é de: => R$ {saldo:.2f} <=\n')
+                input('Pressione qualquer tecla para voltar ao menu!')
 
             case 3:
                 data = datetime.today()
