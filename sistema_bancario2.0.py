@@ -63,6 +63,32 @@ colorir = {
 }
 
 
+
+class Criar_usuario:
+    def __init__(self, nome: str, data_nascimento: int, cpf: int , endereco: str) -> None:
+        self.nome = nome
+        self.data_nascimento = data_nascimento
+        self.cpf = cpf
+        self.endereco = endereco
+        self.dados_usuario = {key: value for (key,value) in self.__dict__.items()}
+    
+    
+    def __str__(self):
+        return f'Class: {self.__class__.__name__} - Atributtes: {", ".join([f"{key}: {value}" for (key,value) in self.__dict__.items()])}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Operacoes:
     """_ Classe resposnável por conter as principais funcionalidades do sistema principal. _
     """
