@@ -118,7 +118,7 @@ class Operacoes:
                 input('Pressione qualquer tecla para voltar ao menu inicial...')
                 saldo_anterior = ''
     
-    def extrato_deposito(self) -> None:
+    def extrato(self) -> None:
         """Método responsável por apresentar na tela um extrato contendo todas as operações
         realizadas pelo usuário de forma detalhada.
         """
