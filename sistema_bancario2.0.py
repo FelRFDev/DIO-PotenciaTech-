@@ -4,16 +4,16 @@ Desafio parte 2 - Refatorando o código!
 - Separar as funções existentes de saque depósito e extrato em Funções! Cada função deverá ter uma regra
 na passagem de argumentos.
 
-* A função de saque deve receber argumentos somente por **Kwargs.
-* A função de depósito deve receber os argumentos somente por posição.
+* A função de saque deve receber argumentos somente por **Kwargs. #### => FEITO <= ####
+* A função de depósito deve receber os argumentos somente por posição. #### => FEITO <= ####
 * A função de extrato deve receber os argumentos de forma posicional e **kwargs (Argumento posicional: saldo / Argumento Nomeado: Extrato)
 
 - Criar duas novas funções: Cadastrar usuário (Cliente) e cadastrar conta bancária!
 
 * Criar Usuário: O programa deve armazenar os usuários em uma Lista. Um usuário é composto por
-(Nome, Data de nascimento, Cpf e Endereço). O endereço é uma string com o formato de: 
-Logradouro / número / bairro / cidade-sigla do estado. Deve ser armazenado somente os 
-números do cpf (sem o - ). Não podemos cadastrar mais de um usuário com o mesmo cpf. 
+(Nome, Data de nascimento, Cpf e Endereço). O endereço é uma string com o formato de:
+Logradouro / número / bairro / cidade-sigla do estado. Deve ser armazenado somente os
+números do cpf (sem o - ). Não podemos cadastrar mais de um usuário com o mesmo cpf.
 Utilizar dicionários
 
 * Criar Conta Corrente: O programa deve armazenar contas em uma lista. Uma conta é composta por:
@@ -24,19 +24,21 @@ DICA:
 Ao criar um usuário, o mesmo não terá uma conta vinculada portanto, para criar esse vínculo, filtre a lista de usuários
 de acordo com o cpf informado para cada usuário da lista. Caso encontre, basta vincular a conta ao usuário encontrado.
 
+PAREI NA PARTE EM QUE DEVO CRIAR OS EXTRATOS SOMENTE PARA SAQUE E DEPÓSITO.
+
+
 """
 
 from datetime import datetime
 from tabulate import tabulate
 
-
-sistem_logo="""███████╗██╗███████╗████████╗███████╗███╗   ███╗ █████╗                            
+sistem_logo = """███████╗██╗███████╗████████╗███████╗███╗   ███╗ █████╗                            
 ██╔════╝██║██╔════╝╚══██╔══╝██╔════╝████╗ ████║██╔══██╗                           
 ███████╗██║███████╗   ██║   █████╗  ██╔████╔██║███████║                           
 ╚════██║██║╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██╔══██║                           
 ███████║██║███████║   ██║   ███████╗██║ ╚═╝ ██║██║  ██║                           
 ╚══════╝╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝                           
-                                                                                  
+
 ██████╗  █████╗ ███╗   ██╗ ██████╗ █████╗ ██████╗ ██╗ ██████╗      ██╗    ██████╗ 
 ██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔══██╗██╔══██╗██║██╔═══██╗    ███║   ██╔═████╗
 ██████╔╝███████║██╔██╗ ██║██║     ███████║██████╔╝██║██║   ██║    ╚██║   ██║██╔██║
@@ -44,21 +46,20 @@ sistem_logo="""███████╗██╗███████╗██�
 ██████╔╝██║  ██║██║ ╚████║╚██████╗██║  ██║██║  ██║██║╚██████╔╝     ██║██╗╚██████╔╝
 ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝      ╚═╝╚═╝ ╚═════╝"""
 
-
-
 colorir = {
-    "Vermelho":'\033[31m',
-    'Verde':'\033[32m',
-    'Fecha_Cor':'\033[m',
+    "Vermelho": '\033[31m',
+    'Verde': '\033[32m',
+    'Fecha_Cor': '\033[m',
     "Laranja": '\033[34m'
 }
+
 
 class Operacoes:
     """_ Classe resposnável por conter as principais funcionalidades do sistema principal. _
     """
 
     def sacar(self, valor: float = 0, saldo: float = 0, qtd_saque: int = 0, hora: str = '') -> None:
-    
+
         """_ Método responsável por realizar a operação de saque após fazer algumas validações
         na conta bancária do usuário. _
 
@@ -71,28 +72,35 @@ class Operacoes:
         match saldo:
             case 0:
                 print(f'\n{colorir["Vermelho"]}Você não possui saldo suficiente para sacar!{colorir["Fecha_Cor"]}')
+                input('Pressione qualquer tecla para voltar ao menu...')
 
-            case _ :
+            case _:
                 match valor:
                     case _ as positivo if positivo == 0 or positivo < 0:
                         print(f'\n{colorir["Vermelho"]}Só é permitido valores positivos!{colorir["Fecha_Cor"]}')
-                    
+                        input('Pressione qualquer tecla para voltar ao menu...')
+
                     case _ as quantidade if quantidade > 500:
-                        print(f'\n{colorir["Vermelho"]}Só é permitido sacar valores até R$500,00. Tente novamente!{colorir["Fecha_Cor"]}')
+                        print(f'\n{colorir["Vermelho"]}Só é permitido sacar valores até R$500,00. Tente novamente!'
+                              f'{colorir["Fecha_Cor"]}')
+
+                        input('Pressione qualquer tecla para voltar ao menu...')
 
                     case _ as quantidade if quantidade > 0 and quantidade <= 500 and saldo > 0 and qtd_saque < 3:
                         self.saldo -= valor
                         self.dados_extrato["Quantidade de Saques"][0] += 1
                         self.dados_extrato["Informações dos Saques"]["Valores"].append(valor)
                         self.dados_extrato["Informações dos Saques"]["Horários"].append(hora)
-                        print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi sacado com sucesso! Saldo atual: => R$ {self.saldo} <={colorir["Fecha_Cor"]}')
-                        input('Pressione qualquer tecla para voltar ao menu inicial...')   
-            
-                    case _:
-                        print(f'\n{colorir["Vermelho"]}Você já atingiu o limite de saques diários, volte amanhã!{colorir["Fecha_Cor"]}')
+                        print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi sacado com sucesso! '
+                              f'Saldo atual: => R$ {self.saldo} <={colorir["Fecha_Cor"]}')
+                        input('Pressione qualquer tecla para voltar ao menu inicial...')
 
-                    
-            
+                    case _:
+                        print(
+                            f'\n{colorir["Vermelho"]}Você já atingiu o limite de '
+                            f'saques diários, volte amanhã!{colorir["Fecha_Cor"]}')
+
+                        input('Pressione qualquer tecla para voltar ao menu...')
 
     def depositar(self, valor: float, hora: str) -> None:
         """_ Método responsável por realizar depósito de valores na conta do usuário
@@ -106,42 +114,52 @@ class Operacoes:
 
             case _ as valor_invalido if valor_invalido == 0 or valor_invalido < 0:
                 print(f'\n{colorir["Vermelho"]}Só é permitido depositar valores positivos!{colorir["Fecha_Cor"]}')
+                input('Pressione qualquer tecla para voltar ao menu...')
 
             case _ as quantidade if quantidade >= 1:
-                saldo_anterior=self.saldo
+                saldo_anterior = self.saldo
                 self.saldo += valor
                 self.dados_extrato["Quantidade de Depósitos"][0] += 1
                 self.dados_extrato["Informações dos Depósitos"]["Valores"].append(valor)
                 self.dados_extrato["Informações dos Depósitos"]["Horários"].append(hora)
-                print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi depositado com sucesso! Confira abaixo os detalhes da operação.{colorir["Fecha_Cor"]}\n')
+                print(f'\n{colorir["Laranja"]}O valor de R$ {valor:.2f} foi depositado com sucesso! '
+                      f'Confira abaixo os detalhes da operação.{colorir["Fecha_Cor"]}\n')
                 print(tabulate({"Saldo Anterior": [saldo_anterior],
-                                "Saldo atual":[self.saldo],
-                                "Valor depositado":[valor],
-                                "Horário do Depósito":[hora]
+                                "Saldo atual": [self.saldo],
+                                "Valor depositado": [valor],
+                                "Horário do Depósito": [hora]
                                 }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
                 input('Pressione qualquer tecla para voltar ao menu inicial...')
                 saldo_anterior = ''
-    
-    def extrato_deposito(self) -> None:
+
+    def extrato(self, saldo: float, extrato: int = '') -> None:
         """Método responsável por apresentar na tela um extrato contendo todas as operações
         realizadas pelo usuário de forma detalhada.
         """
-        data = datetime.today()
-        dia = data.date().strftime("%d/%m/%Y")
-        print()
-        print(f" {colorir['Laranja']}Este é o seu extrato gerado correspondente as operações realizadas na data de: {dia}{colorir['Fecha_Cor']} ".center(130, '='))
+        match extrato:
+            case 1: #saques
+                pass
 
-        print(tabulate({                   "Quantidade de Saques":[self.dados_extrato["Quantidade de Saques"][0]], 
-                                           "Valores dos Saques R$":self.dados_extrato["Informações dos Saques"]["Valores"],
-                                           "Horários dos Saques":self.dados_extrato["Informações dos Saques"]["Horários"],
-                                           "Quantidade de Depósitos":[self.dados_extrato["Quantidade de Depósitos"][0]], 
-                                           "Valores dos Depósitos R$":self.dados_extrato["Informações dos Depósitos"]["Valores"],
-                                           "Horários dos Depósitos":self.dados_extrato["Informações dos Depósitos"]["Horários"]
-                                           }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
-        print()
-        print(f'Seu saldo atual é de: => R$ {self.saldo:.2f} <=\n')
-        input('Pressione qualquer tecla para voltar ao menu!')
+            case 2: #depósitos
+                pass
 
+            case 3:
+                data = datetime.today()
+                dia = data.date().strftime("%d/%m/%Y")
+                print()
+                print(f" {colorir['Laranja']}Este é o seu extrato gerado correspondente as operações realizadas na "
+                      f"data de: {dia}{colorir['Fecha_Cor']} ".center(130, '='))
+
+                print(tabulate({"Quantidade de Saques": [self.dados_extrato["Quantidade de Saques"][0]],
+                                "Valores dos Saques R$": self.dados_extrato["Informações dos Saques"]["Valores"],
+                                "Horários dos Saques": self.dados_extrato["Informações dos Saques"]["Horários"],
+                                "Quantidade de Depósitos": [self.dados_extrato["Quantidade de Depósitos"][0]],
+                                "Valores dos Depósitos R$": self.dados_extrato["Informações dos Depósitos"]["Valores"],
+                                "Horários dos Depósitos": self.dados_extrato["Informações dos Depósitos"]["Horários"]
+                                }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+                print()
+                print(f'Seu saldo atual é de: => R$ {saldo:.2f} <=\n')
+                input('Pressione qualquer tecla para voltar ao menu!')
 
 
 
@@ -154,16 +172,16 @@ class Sistema_Bancario(Operacoes):
         Operacoes (_Class_): _ Classe repassada por herança que contêm todos os métodos utilizados
          na classe principal. _
     """
+
     def __init__(self, menu: list) -> None:
         self.menu = menu
         self.saldo = 0
         self.dados_extrato = {
             "Quantidade de Saques": [0],
-            "Informações dos Saques": {"Valores":[], "Horários":[]},
+            "Informações dos Saques": {"Valores": [], "Horários": []},
             "Quantidade de Depósitos": [0],
-            "Informações dos Depósitos": {"Valores": [], "Horários":[]},
+            "Informações dos Depósitos": {"Valores": [], "Horários": []},
         }
-
 
     def menu_principal(self) -> str:
         """_ Método que fornece ao usuário todas as opções
@@ -177,7 +195,7 @@ class Sistema_Bancario(Operacoes):
               'Versão 1.0\n')
         print(" MENU ".center(40, '='))
         for index, opcao in enumerate(self.menu):
-            print(f"[{index+1}] -> {opcao}")
+            print(f"[{index + 1}] -> {opcao}")
         print("".center(40, '='))
 
         while True:
@@ -195,7 +213,7 @@ class Sistema_Bancario(Operacoes):
                             case "":
                                 raise ValueError(f'\n{colorir["Vermelho"]}ERRO! Você precisa digitar alguma opção, '
                                                  f'tente novamente.{colorir["Fecha_Cor"]}')
-                            case _ as status if  status.isalnum() == False:
+                            case _ as status if status.isalnum() == False:
                                 raise ValueError(f'\n{colorir["Vermelho"]}ERRO! Digite somente números!'
                                                  f'{colorir["Fecha_Cor"]}')
                             case _:
@@ -226,7 +244,6 @@ class Sistema_Bancario(Operacoes):
 
 if __name__ == '__main__':
     sistema = Sistema_Bancario(['Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
-    
 
     while True:
         data = datetime.today()
@@ -254,9 +271,21 @@ if __name__ == '__main__':
                     input('Pressione qualquer tecla para voltar ao menu...')
                 else:
                     sistema.sacar(valor_saque, sistema.saldo, sistema.dados_extrato["Quantidade de Saques"][0], hora)
-            
+
             case "Gerar Extrato":
-                sistema.extrato_deposito()
+                extratos_opcs = ['Saques', 'Depósitos', 'Geral']
+                print(" Opções de Extrato ".center(40, '='))
+                for indice, extrato in enumerate(extratos_opcs):
+                    print(f'[{indice+1}] -> {extrato}')
+                print("".center(40, '='))
+                tipo_extrato = input('\nEscolha qual tipo de extrado deseja visualizar: ').strip()
+                try:
+                    tipo_extrato = int(tipo_extrato)
+                except Exception:
+                    print(f'\n{colorir["Vermelho"]}Opção inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                    input('Pressione qualquer tecla para voltar ao menu...')
+                else:
+                    sistema.extrato(sistema.saldo, extrato=tipo_extrato)
 
             case "Finalizar":
                 print('Finalizando sistema, obrigado e volte sempre!')
