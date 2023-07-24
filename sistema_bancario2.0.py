@@ -1,3 +1,4 @@
+
 """
 Desafio parte 2 - Refatorando o código!
 
@@ -63,35 +64,119 @@ colorir = {
 }
 
 
-
-class Criar_usuario:
-    def __init__(self, nome: str, data_nascimento: int, cpf: int , endereco: str) -> None:
+class Usuario:
+    def __init__(self, nome: str, data_nascimento: int, cpf: int, endereco: str) -> None:
         self.nome = nome
         self.data_nascimento = data_nascimento
         self.cpf = cpf
         self.endereco = endereco
-        self.dados_usuario = {key: value for (key,value) in self.__dict__.items()}
-    
-    
+        self.dados_usuario = {key: value for (key, value) in self.__dict__.items()}
+
     def __str__(self):
-        return f'Class: {self.__class__.__name__} - Atributtes: {", ".join([f"{key}: {value}" for (key,value) in self.__dict__.items()])}'
-
-
-
-
-
-
-
-
-
-
-
-
+        return f'Class: {self.__class__.__name__} - Atributtes: {", ".join([f"{key}: {value}" for (key, value) in self.__dict__.items()])}'
 
 
 class Operacoes:
     """_ Classe resposnável por conter as principais funcionalidades do sistema principal. _
     """
+
+    def cadastrar_usuario(self):
+
+        confirmar_dados = False
+        while confirmar_dados == False:
+            # ========== Início da Etapa 1 ==========
+            print()
+            print(' CADASTRAMENTO - ETAPA 1 (IDENTIFICAÇÃO) '.center(80, "="))
+            nome_do_usuario = input(
+                '\nPor favor, digite o nome completo do usuário ou "sair" para voltar ao menu: ').strip().title()
+            if nome_do_usuario == 'Sair':
+                break
+            elif True in [any(letra.isdigit() for letra in nome_do_usuario)] or not nome_do_usuario:
+                print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+            else:
+                while True:
+                    data_nascimento = input('Informe a data de nascimento: ').strip()
+                    if not data_nascimento:
+                        print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                        continue
+                    else:
+                        while True:
+                            cpf = input("Informe os números do cpf. DIGITE SOMENTE OS NÚMEROS:").strip()
+                            try:
+                                cpf = int(cpf)
+                            except Exception:
+                                print(
+                                    f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                continue
+                            else:
+                                print(
+                                    '\nDeseja confirmar as informações para Identificação e prosseguir para a segunda etapa?')
+                                prosseguir = input('Digite Sim ou Não para voltar ao início: ').strip().title()
+                                if prosseguir == 'Não':
+                                    break
+                                else:
+                                    # ========== Início da Etapa 2 ==========
+                                    print()
+                                    print(' CADASTRAMENTO - ETAPA 2 (RESIDÊNCIA) '.center(80, "="))
+                                    confirmar_endereco = False
+                                    endereco = ''
+                                    while confirmar_endereco == False:
+                                        logradouro = input('Informe o  Logradouro: ').strip()
+                                        if not logradouro:
+                                            print(
+                                                f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                            continue
+                                        numero = input('Informe o número da residência: ').strip()
+                                        try:
+                                            numero = int(numero)
+                                        except Exception:
+                                            print(
+                                                f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                            continue
+                                        else:
+                                            bairro = input('Informe o bairro: ').strip()
+                                            if not bairro:
+                                                print(
+                                                    f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                                continue
+                                            cidade = input('Informe a cidade: ').strip()
+                                            estado = input('Informe o estado: ')
+                                            if not cidade or not estado:
+                                                print(
+                                                    f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                                continue
+                                            print(
+                                                '\nDeseja confirmar as informações para Residência e prosseguir para a etapa final?')
+                                            confirmar = input(
+                                                'Digite Sim ou Não para voltar ao início: ').strip().title()
+
+                                            if confirmar == 'Sim':
+                                                # ========== Início da Etapa 3 ==========
+                                                endereco = f'Logradouro: {logradouro} / Número: {numero}/ Bairro: {bairro} / {cidade}-{estado}'
+                                                confirmar_endereco = True
+                                                print()
+                                                print(' CADASTRAMENTO - ETAPA 3 (CONCLUIR CADASTRO) '.center(80, "="))
+                                                print(
+                                                    '\nAo concluir o cadastro, você concorda estar ciente e declara ser reponsável por todos os dados informados nas etapas anteriores.')
+                                                print(
+                                                    '\nDeseja confirmar as informações de todas as etapas anteriores e concluir o cadastro?')
+                                                confirmar_dados = input(
+                                                    'Digite Sim ou Não para voltar ao início: ').strip().title()
+                                                if confirmar_dados == 'Sim':
+                                                    novo_usuario = Usuario(nome_do_usuario, data_nascimento, cpf,
+                                                                           endereco)
+                                                    self.usuarios_cadastrados.append(novo_usuario)
+                                                    print(self.usuarios_cadastrados)
+                                                    print(novo_usuario)
+                                                    print(
+                                                        f'{colorir["Verde"]}\n\nUsuário cadastrado com sucesso!{colorir["Fecha_Cor"]}')
+                                                    input('Pressione qualquer tecla para voltar ao menu inicial!')
+                                                    confirmar_dados = True
+                                                else:
+                                                    input(
+                                                        f'{colorir["Vermelho"]}\n\nCadastramento cancelado, pressione qualquer tecla para voltar ao menu inicial...{colorir["Fecha_Cor"]}')
+                                break
+                        break
 
     def sacar(self, valor: float = 0, saldo: float = 0, qtd_saque: int = 0, hora: str = '') -> None:
 
@@ -166,43 +251,45 @@ class Operacoes:
                                 }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
                 input('Pressione qualquer tecla para voltar ao menu inicial...')
                 saldo_anterior = ''
- 
+
     def extrato(self, saldo: float, extrato: int = '') -> None:
         """Método responsável por apresentar na tela um extrato contendo todas as operações
         realizadas pelo usuário de forma detalhada.
         """
         match extrato:
-            case 1: #saques
+            case 1:  # saques
                 data = datetime.today()
                 dia = data.date().strftime("%d/%m/%Y")
                 print()
                 print()
-                print(f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Saques realizadas na "
-                      f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
-                print(tabulate({"Quantidade de saques":[self.dados_extrato['Quantidade de Saques'][0]],
-                                "Valores dos Saques":self.dados_extrato['Informações dos Saques']['Valores'],
-                                "Horário dos Saques":self.dados_extrato['Informações dos Saques']['Horários'],
-                                },headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+                print(
+                    f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Saques realizadas na "
+                    f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
+                print(tabulate({"Quantidade de saques": [self.dados_extrato['Quantidade de Saques'][0]],
+                                "Valores dos Saques": self.dados_extrato['Informações dos Saques']['Valores'],
+                                "Horário dos Saques": self.dados_extrato['Informações dos Saques']['Horários'],
+                                }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
                 print(f'\nSeu saldo atual é de: => R$ {saldo:.2f} <=\n')
                 input('Pressione qualquer tecla para voltar ao menu!')
 
-            case 2: #depósitos
+            case 2:  # depósitos
                 data = datetime.today()
                 dia = data.date().strftime("%d/%m/%Y")
                 print()
                 print()
-                print(f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Depósito realizadas na "
-                      f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
+                print(
+                    f"{colorir['Laranja']} Este é o seu extrato gerado correspondente as operações de Depósito realizadas na "
+                    f"data de: {dia} {colorir['Fecha_Cor']}".center(120, '='))
                 print(tabulate({
-                    "Quantidade de Depósitos":[self.dados_extrato['Quantidade de Depósitos'][0]],
-                    "Valores dos Depósitos":self.dados_extrato['Informações dos Depósitos']['Valores'],
-                    "Horário dos Depósitos":self.dados_extrato['Informações dos Depósitos']['Horários'],
-                },headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
+                    "Quantidade de Depósitos": [self.dados_extrato['Quantidade de Depósitos'][0]],
+                    "Valores dos Depósitos": self.dados_extrato['Informações dos Depósitos']['Valores'],
+                    "Horário dos Depósitos": self.dados_extrato['Informações dos Depósitos']['Horários'],
+                }, headers='keys', tablefmt='fancy_grid', missingval='Célula Vazia'))
 
                 print(f'\nSeu saldo atual é de: => R$ {saldo:.2f} <=\n')
                 input('Pressione qualquer tecla para voltar ao menu!')
 
-            case 3:
+            case 3:  # completo
                 data = datetime.today()
                 dia = data.date().strftime("%d/%m/%Y")
                 print()
@@ -221,7 +308,6 @@ class Operacoes:
                 input('Pressione qualquer tecla para voltar ao menu!')
 
 
-
 class Sistema_Bancario(Operacoes):
     """_ Classe que representa o sistema principal, contendo todas as características
      da conta bancária, e valores. Possui também o método para apresentar o menu princial
@@ -233,7 +319,7 @@ class Sistema_Bancario(Operacoes):
     """
 
     def __init__(self, menu: list) -> None:
-        self.menu = menu
+        self.menu = menu  # lista que contém as opções para o menu
         self.saldo = 0
         self.dados_extrato = {
             "Quantidade de Saques": [0],
@@ -241,6 +327,7 @@ class Sistema_Bancario(Operacoes):
             "Quantidade de Depósitos": [0],
             "Informações dos Depósitos": {"Valores": [], "Horários": []},
         }
+        self.usuarios_cadastrados = []  # lista para armazenar os usuários cadastrados
 
     def menu_principal(self) -> str:
         """_ Método que fornece ao usuário todas as opções
@@ -299,10 +386,13 @@ class Sistema_Bancario(Operacoes):
                     case 4:
                         print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[3]}{colorir["Fecha_Cor"]}')
                         return self.menu[3]
+                    case 5:
+                        print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[4]}{colorir["Fecha_Cor"]}')
+                        return self.menu[4]
 
 
 if __name__ == '__main__':
-    sistema = Sistema_Bancario(['Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
+    sistema = Sistema_Bancario(['Cadastrar Usuário', 'Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
 
     while True:
         data = datetime.today()
@@ -311,6 +401,9 @@ if __name__ == '__main__':
 
         resposta_usuario = sistema.menu_principal()
         match resposta_usuario:
+            case "Cadastrar Usuário":
+                sistema.cadastrar_usuario()
+
             case "Depositar":
                 valor_deposito = input('Informe o valor do deposito  R$: ').strip()
                 try:
@@ -335,7 +428,7 @@ if __name__ == '__main__':
                 extratos_opcs = ['Saques', 'Depósitos', 'Geral']
                 print(" Opções de Extrato ".center(40, '='))
                 for indice, extrato in enumerate(extratos_opcs):
-                    print(f'[{indice+1}] -> {extrato}')
+                    print(f'[{indice + 1}] -> {extrato}')
                 print("".center(40, '='))
                 tipo_extrato = input('\nEscolha qual tipo de extrado deseja visualizar: ').strip()
                 try:
