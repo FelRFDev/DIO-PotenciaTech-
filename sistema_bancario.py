@@ -88,16 +88,18 @@ class Operacoes:
 
         confirmar_dados = False
         while confirmar_dados == False:
-            nome_do_usuario = input('\nPor favor, digite o nome completo do usuário: ').strip().title()
-
-            if True in [any(letra.isdigit() for letra in nome_do_usuario)]  or not nome_do_usuario:
+            # ========== Início da Etapa 1 ==========
+            print()
+            print(' CADASTRAMENTO - ETAPA 1 (IDENTIFICAÇÃO) '.center(80, "="))
+            nome_do_usuario = input('\nPor favor, digite o nome completo do usuário ou "sair" para voltar ao menu: ').strip().title()
+            if nome_do_usuario == 'Sair':
+                break
+            elif True in [any(letra.isdigit() for letra in nome_do_usuario)]  or not nome_do_usuario:
                 print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
             else:
                 while True:
                     data_nascimento = input('Informe a data de nascimento: ').strip()
-                    try:
-                        data_nascimento = int(data_nascimento)
-                    except Exception:
+                    if not data_nascimento:
                         print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
                         continue
                     else:
@@ -109,46 +111,61 @@ class Operacoes:
                                 print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
                                 continue
                             else:
-                                confirmar_endereco = False
-                                endereco = ''
-                                while confirmar_endereco == False:
-                                    logradouro = input('Informe o  Logradouro: ').strip()
-                                    if not logradouro:
-                                        print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
-                                        continue
-                                    numero = input('Informe o número da residência: ').strip()
-                                    try:
-                                        numero = int(numero)
-                                    except Exception:
-                                        print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
-                                        continue
-                                    else:
-                                        bairro = input('Informe o bairro: ').strip()
-                                        if not bairro:
+                                print('\nDeseja confirmar as informações para Identificação e prosseguir para a segunda etapa?')
+                                prosseguir = input('Digite Sim ou Não para voltar ao início: ').strip().title()
+                                if prosseguir == 'Não':
+                                    break
+                                else:
+                                    # ========== Início da Etapa 2 ==========      
+                                    print()
+                                    print(' CADASTRAMENTO - ETAPA 2 (RESIDÊNCIA) '.center(80, "="))
+                                    confirmar_endereco = False
+                                    endereco = ''
+                                    while confirmar_endereco == False:
+                                        logradouro = input('Informe o  Logradouro: ').strip()
+                                        if not logradouro:
                                             print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
                                             continue
-                                        cidade = input('Informe a cidade: ').strip()
-                                        estado = input('Informe o estado: ')
-                                        if not cidade or not estado:
+                                        numero = input('Informe o número da residência: ').strip()
+                                        try:
+                                            numero = int(numero)
+                                        except Exception:
                                             print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
                                             continue
-                                        confirmar = input('Digite [S] para confirmar os dados do endereço ou \n[N] para digitar as informações novamente: ').upper()
-                                        if confirmar =='S':
-                                            endereco = f'Logradouro:{logradouro} / Número:{numero}/ Bairro:{bairro} / {cidade}-{estado}'
-                                            confirmar_endereco = True
-                                            confirmar_dados = input('Deseja confirmar o cadastramento das informações digitadas? [S/N]: ').upper()
-                                            if confirmar_dados == 'S':
-                                                novo_usuario = Usuario(nome_do_usuario, data_nascimento, cpf, endereco)
-                                                self.usuarios_cadastrados.append(novo_usuario)
-                                                print(self.usuarios_cadastrados)
-                                                print(novo_usuario)
-                                                print(f'{colorir["Verde"]}\n\nUsuário cadastrado com sucesso!{colorir["Fecha_Cor"]}')
-                                                input('Pressione qualquer tecla para voltar ao menu inicial!')
-                                                confirmar_dados = True
-                                            else:
-                                                input(f'{colorir["Vermelho"]}\n\nCadastramento cancelado, pressione qualquer tecla para volar ao menu inicial...{colorir["Fecha_Cor"]}')
-                            break
-                    break
+                                        else:
+                                            bairro = input('Informe o bairro: ').strip()
+                                            if not bairro:
+                                                print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                                continue
+                                            cidade = input('Informe a cidade: ').strip()
+                                            estado = input('Informe o estado: ')
+                                            if not cidade or not estado:
+                                                print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                                continue
+                                            print('\nDeseja confirmar as informações para Residência e prosseguir para a etapa final?')
+                                            confirmar = input('Digite Sim ou Não para voltar ao início: ').strip().title()
+
+                                            if confirmar =='Sim':
+                                                # ========== Início da Etapa 3 ==========
+                                                endereco = f'Logradouro: {logradouro} / Número: {numero}/ Bairro: {bairro} / {cidade}-{estado}'
+                                                confirmar_endereco = True
+                                                print()
+                                                print(' CADASTRAMENTO - ETAPA 3 (CONCLUIR CADASTRO) '.center(80, "="))
+                                                print('\nAo concluir o cadastro, você concorda estar ciente e declara ser reponsável por todos os dados informados nas etapas anteriores.')
+                                                print('\nDeseja confirmar as informações de todas as etapas anteriores e concluir o cadastro?')
+                                                confirmar_dados = input('Digite Sim ou Não para voltar ao início: ').strip().title()
+                                                if confirmar_dados == 'Sim':
+                                                    novo_usuario = Usuario(nome_do_usuario, data_nascimento, cpf, endereco)
+                                                    self.usuarios_cadastrados.append(novo_usuario)
+                                                    print(self.usuarios_cadastrados)
+                                                    print(novo_usuario)
+                                                    print(f'{colorir["Verde"]}\n\nUsuário cadastrado com sucesso!{colorir["Fecha_Cor"]}')
+                                                    input('Pressione qualquer tecla para voltar ao menu inicial!')
+                                                    confirmar_dados = True
+                                                else:
+                                                    input(f'{colorir["Vermelho"]}\n\nCadastramento cancelado, pressione qualquer tecla para voltar ao menu inicial...{colorir["Fecha_Cor"]}')
+                                break
+                        break
 
     def sacar(self, valor: float = 0, saldo: float = 0, qtd_saque: int = 0, hora: str = '') -> None:
 
