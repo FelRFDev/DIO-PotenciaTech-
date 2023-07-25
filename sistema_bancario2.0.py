@@ -1,4 +1,3 @@
-
 """
 Desafio parte 2 - Refatorando o código!
 
@@ -42,19 +41,19 @@ As opções são repassadas a função conforme solicitado no exercício.
 from datetime import datetime
 from tabulate import tabulate
 
-sistem_logo = """███████╗██╗███████╗████████╗███████╗███╗   ███╗ █████╗                            
-██╔════╝██║██╔════╝╚══██╔══╝██╔════╝████╗ ████║██╔══██╗                           
-███████╗██║███████╗   ██║   █████╗  ██╔████╔██║███████║                           
-╚════██║██║╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██╔══██║                           
-███████║██║███████║   ██║   ███████╗██║ ╚═╝ ██║██║  ██║                           
-╚══════╝╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝                           
-
-██████╗  █████╗ ███╗   ██╗ ██████╗ █████╗ ██████╗ ██╗ ██████╗      ██╗    ██████╗ 
-██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔══██╗██╔══██╗██║██╔═══██╗    ███║   ██╔═████╗
-██████╔╝███████║██╔██╗ ██║██║     ███████║██████╔╝██║██║   ██║    ╚██║   ██║██╔██║
-██╔══██╗██╔══██║██║╚██╗██║██║     ██╔══██║██╔══██╗██║██║   ██║     ██║   ████╔╝██║
-██████╔╝██║  ██║██║ ╚████║╚██████╗██║  ██║██║  ██║██║╚██████╔╝     ██║██╗╚██████╔╝
-╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝      ╚═╝╚═╝ ╚═════╝"""
+sistem_logo = """███████╗██╗███████╗████████╗███████╗███╗   ███╗ █████╗                                
+██╔════╝██║██╔════╝╚══██╔══╝██╔════╝████╗ ████║██╔══██╗                               
+███████╗██║███████╗   ██║   █████╗  ██╔████╔██║███████║                               
+╚════██║██║╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║██╔══██║                               
+███████║██║███████║   ██║   ███████╗██║ ╚═╝ ██║██║  ██║                               
+╚══════╝╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝                               
+                                                                                      
+██████╗  █████╗ ███╗   ██╗ ██████╗ █████╗ ██████╗ ██╗ ██████╗     ██████╗     ██████╗ 
+██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔══██╗██╔══██╗██║██╔═══██╗    ╚════██╗   ██╔═████╗
+██████╔╝███████║██╔██╗ ██║██║     ███████║██████╔╝██║██║   ██║     █████╔╝   ██║██╔██║
+██╔══██╗██╔══██║██║╚██╗██║██║     ██╔══██║██╔══██╗██║██║   ██║    ██╔═══╝    ████╔╝██║
+██████╔╝██║  ██║██║ ╚████║╚██████╗██║  ██║██║  ██║██║╚██████╔╝    ███████╗██╗╚██████╔╝
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝     ╚══════╝╚═╝ ╚═════╝"""
 
 colorir = {
     "Vermelho": '\033[31m',
@@ -65,15 +64,34 @@ colorir = {
 
 
 class Usuario:
-    def __init__(self, nome: str, data_nascimento: int, cpf: int, endereco: str) -> None:
+    def __init__(self, nome: str, data_nascimento: str, cpf: int, endereco: str) -> None:
         self.nome = nome
         self.data_nascimento = data_nascimento
         self.cpf = cpf
         self.endereco = endereco
         self.dados_usuario = {key: value for (key, value) in self.__dict__.items()}
+    #getter
+    def get_cpf(self):
+        return self.cpf
+
+    def __str__(self) -> str:
+        return f'Class: {self.__class__.__name__} - Atributtes: {", ".join([f"{key}: {value}" for (key, value) in self.__dict__.items()])}'
+
+
+class Conta_corrente:
+    agencia = '0001'
+
+    def __init__(self, numero_da_conta: int, usuario: object = ''):
+
+        self.numero_da_conta = numero_da_conta
+        self.usuario = usuario
 
     def __str__(self):
-        return f'Class: {self.__class__.__name__} - Atributtes: {", ".join([f"{key}: {value}" for (key, value) in self.__dict__.items()])}'
+        return f'Class: {self.__class__.__name__} / Atributtes: ' \
+               f'{", ".join([f"{key}: {value}" for (key,value) in self.__dict__.items()])}'
+
+
+
 
 
 class Operacoes:
@@ -152,7 +170,7 @@ class Operacoes:
 
                                             if confirmar == 'Sim':
                                                 # ========== Início da Etapa 3 ==========
-                                                endereco = f'Logradouro: {logradouro} / Número: {numero}/ Bairro: {bairro} / {cidade}-{estado}'
+                                                endereco = f'Logradouro: {logradouro} / Número: {numero} / Bairro: {bairro} / {cidade}-{estado}'
                                                 confirmar_endereco = True
                                                 print()
                                                 print(' CADASTRAMENTO - ETAPA 3 (CONCLUIR CADASTRO) '.center(80, "="))
@@ -163,11 +181,11 @@ class Operacoes:
                                                 confirmar_dados = input(
                                                     'Digite Sim ou Não para voltar ao início: ').strip().title()
                                                 if confirmar_dados == 'Sim':
-                                                    novo_usuario = Usuario(nome_do_usuario, data_nascimento, cpf,
+                                                    nome_do_usuario = Usuario(nome_do_usuario, data_nascimento, cpf,
                                                                            endereco)
-                                                    self.usuarios_cadastrados.append(novo_usuario)
+                                                    self.usuarios_cadastrados.append(nome_do_usuario)
                                                     print(self.usuarios_cadastrados)
-                                                    print(novo_usuario)
+                                                    print(nome_do_usuario)
                                                     print(
                                                         f'{colorir["Verde"]}\n\nUsuário cadastrado com sucesso!{colorir["Fecha_Cor"]}')
                                                     input('Pressione qualquer tecla para voltar ao menu inicial!')
@@ -177,6 +195,55 @@ class Operacoes:
                                                         f'{colorir["Vermelho"]}\n\nCadastramento cancelado, pressione qualquer tecla para voltar ao menu inicial...{colorir["Fecha_Cor"]}')
                                 break
                         break
+
+    def criar_conta_corrente(self):
+        conta_gerada = False
+        while not conta_gerada:
+            vincular_cpf = input('Informe o cpf do usuário para vincular a conta: ').strip()
+            match vincular_cpf:
+                case '':
+                    print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                case _:
+                    vincular_cpf = int(vincular_cpf)
+                    for usuario in self.usuarios_cadastrados:
+                        cpf_usuario = usuario.get_cpf()
+
+                        if cpf_usuario != vincular_cpf:
+                            print(f'\n{colorir["Vermelho"]}CPF NÃO CADASTRADO! Tente novamente.{colorir["Fecha_Cor"]}')
+
+                        elif cpf_usuario == vincular_cpf and len(self.contas_correntes) == 0:
+
+                            conta_corrente=Conta_corrente(1, usuario)
+                            self.contas_correntes.append(conta_corrente)
+
+                            for conta in self.contas_correntes:
+                                print(conta)
+                                print(conta.numero_da_conta)
+
+                            print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
+                            input('Presione qualquer tecla para voltar ao menu...')
+
+                            conta_gerada = True
+
+                        elif cpf_usuario == vincular_cpf and len(self.contas_correntes) > 0:
+
+                            conta_corrente = Conta_corrente(self.contas_correntes[-1].numero_da_conta+1, usuario)
+                            self.contas_correntes.append(conta_corrente)
+
+                            for conta in self.contas_correntes:
+                                print(conta)
+                                print(conta.numero_da_conta)
+                                print(conta.agencia)
+                                print(conta.usuario.nome)
+
+                            print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
+                            input('Presione qualquer tecla para voltar ao menu...')
+
+                            conta_gerada = True
+
+
+
+
 
     def sacar(self, valor: float = 0, saldo: float = 0, qtd_saque: int = 0, hora: str = '') -> None:
 
@@ -328,6 +395,7 @@ class Sistema_Bancario(Operacoes):
             "Informações dos Depósitos": {"Valores": [], "Horários": []},
         }
         self.usuarios_cadastrados = []  # lista para armazenar os usuários cadastrados
+        self.contas_correntes = []
 
     def menu_principal(self) -> str:
         """_ Método que fornece ao usuário todas as opções
@@ -389,10 +457,13 @@ class Sistema_Bancario(Operacoes):
                     case 5:
                         print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[4]}{colorir["Fecha_Cor"]}')
                         return self.menu[4]
+                    case 6:
+                        print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[4]}{colorir["Fecha_Cor"]}')
+                        return self.menu[5]
 
 
 if __name__ == '__main__':
-    sistema = Sistema_Bancario(['Cadastrar Usuário', 'Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
+    sistema = Sistema_Bancario(['Cadastrar Usuário', 'Criar Conta Corrente', 'Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
 
     while True:
         data = datetime.today()
@@ -403,6 +474,9 @@ if __name__ == '__main__':
         match resposta_usuario:
             case "Cadastrar Usuário":
                 sistema.cadastrar_usuario()
+
+            case 'Criar Conta Corrente':
+                sistema.criar_conta_corrente()
 
             case "Depositar":
                 valor_deposito = input('Informe o valor do deposito  R$: ').strip()
