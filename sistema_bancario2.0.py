@@ -242,7 +242,16 @@ class Operacoes:
                             conta_gerada = True
 
 
+    def listar_contas(self):
+        if len(self.contas_correntes) == 0:
+            print(f'\n{colorir["Vermelho"]}Ainda não existem contas cadastradas!.{colorir["Fecha_Cor"]}')
+            input('Pressione qualquer tecla para voltar ao menu...')
 
+        else:
+            print(f'Total de contas cadastradas: => {len(self.contas_correntes)} <=')
+            for conta in self.contas_correntes:
+                print(f'Conta Nº: {conta.numero_da_conta} / Usuário: {conta.usuario.nome}')
+            input('\nPressione qualquer tecla para voltar ao menu...')
 
 
     def sacar(self, valor: float = 0, saldo: float = 0, qtd_saque: int = 0, hora: str = '') -> None:
@@ -432,7 +441,7 @@ class Sistema_Bancario(Operacoes):
                                                  f'{colorir["Fecha_Cor"]}')
                             case _:
                                 escolha_do_usuario = int(escolha_do_usuario)
-                                if escolha_do_usuario > 4 or escolha_do_usuario < 1:
+                                if escolha_do_usuario > 7 or escolha_do_usuario < 1:
                                     raise ValueError(f'\n\n{colorir["Vermelho"]}ERRO! Você digitou uma opção inválida, '
                                                      f'tente novamente.{colorir["Fecha_Cor"]}')
 
@@ -458,12 +467,16 @@ class Sistema_Bancario(Operacoes):
                         print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[4]}{colorir["Fecha_Cor"]}')
                         return self.menu[4]
                     case 6:
-                        print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[4]}{colorir["Fecha_Cor"]}')
+                        print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[5]}{colorir["Fecha_Cor"]}')
                         return self.menu[5]
+                    case 7:
+                        print(f'\n{colorir["Verde"]}Você escolheu a opção -> {self.menu[6]}{colorir["Fecha_Cor"]}')
+                        return self.menu[6]
 
 
 if __name__ == '__main__':
-    sistema = Sistema_Bancario(['Cadastrar Usuário', 'Criar Conta Corrente', 'Depositar', 'Sacar', 'Gerar Extrato', 'Finalizar'])
+    sistema = Sistema_Bancario(['Cadastrar Usuário', 'Criar Conta Corrente', 'Depositar',
+                                'Sacar', 'Gerar Extrato', 'Listar Contas', 'Finalizar'])
 
     while True:
         data = datetime.today()
@@ -512,7 +525,8 @@ if __name__ == '__main__':
                     input('Pressione qualquer tecla para voltar ao menu...')
                 else:
                     sistema.extrato(sistema.saldo, extrato=tipo_extrato)
-
+            case 'Listar Contas':
+                sistema.listar_contas()
             case "Finalizar":
                 print('Finalizando sistema, obrigado e volte sempre!')
                 break
