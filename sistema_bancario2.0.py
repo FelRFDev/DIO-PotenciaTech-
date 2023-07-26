@@ -6,24 +6,25 @@ na passagem de argumentos.
 
 * A função de saque deve receber argumentos somente por **Kwargs. #### => FEITO <= ####
 * A função de depósito deve receber os argumentos somente por posição. #### => FEITO <= ####
-* A função de extrato deve receber os argumentos de forma posicional e **kwargs (Argumento posicional: saldo / Argumento Nomeado: Extrato) #### => FEITO <= ####
+* A função de extrato deve receber os argumentos de forma posicional e **kwargs 
+(Argumento posicional: saldo / Argumento Nomeado: Extrato) #### => FEITO <= ####
 
 
-- Criar duas novas funções: Cadastrar usuário (Cliente) e cadastrar conta bancária!
+- Criar duas novas funções: Cadastrar usuário (Cliente) e cadastrar conta bancária! #### => FEITO <= ####
 
-* Criar Usuário: O programa deve armazenar os usuários em uma Lista. Um usuário é composto por
+* Criar Usuário: O programa deve armazenar os usuários em uma Lista. Um usuário é composto por   #### => FEITO <= ####
 (Nome, Data de nascimento, Cpf e Endereço). O endereço é uma string com o formato de:
 Logradouro / número / bairro / cidade-sigla do estado. Deve ser armazenado somente os
 números do cpf (sem o - ). Não podemos cadastrar mais de um usuário com o mesmo cpf.
 Utilizar dicionários
 
-* Criar Conta Corrente: O programa deve armazenar contas em uma lista. Uma conta é composta por:
+* Criar Conta Corrente: O programa deve armazenar contas em uma lista. Uma conta é composta por: #### => FEITO <= ####
 (Agência, Número da conta e Usuário). O número da conta é sequencial, iniciando em 1. O número da
 agência é fixo (0001). O usuário pode ter mais de uma conta, mas a conta pertence somente a um usuário.
 
 DICA:
-Ao criar um usuário, o mesmo não terá uma conta vinculada portanto, para criar esse vínculo, filtre a lista de usuários
-de acordo com o cpf informado para cada usuário da lista. Caso encontre, basta vincular a conta ao usuário encontrado.
+Ao criar um usuário, o mesmo não terá uma conta vinculada portanto, para criar esse vínculo, filtre a lista de usuários  #### => FEITO <= ####
+de acordo com o cpf informado para cada usuário da lista. Caso encontre, basta vincular a conta ao usuário encontrado. 
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Modificações feitas =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -119,16 +120,21 @@ class Operacoes:
                         continue
                     else:
                         while True:
-                            cpf = input("Informe os números do cpf. DIGITE SOMENTE OS NÚMEROS:").strip()
+                            cpf = input("Informe os números do cpf. DIGITE SOMENTE OS NÚMEROS: ").strip()
                             try:
                                 cpf = int(cpf)
+                                for usuario in self.usuarios_cadastrados:
+                                    if usuario.cpf == cpf:
+                                        raise ValueError
                             except Exception:
-                                print(
-                                    f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+                                print(f'\n{colorir["Vermelho"]}Informação inválida!\nVocê não digitou um cpf ou o '
+                                      f'cpf informado já está cadastrado!'
+                                      f'\nTente novamente.{colorir["Fecha_Cor"]}')
                                 continue
+
                             else:
-                                print(
-                                    '\nDeseja confirmar as informações para Identificação e prosseguir para a segunda etapa?')
+                                print('\nDeseja confirmar as informações para Identificação e '
+                                      'prosseguir para a segunda etapa?')
                                 prosseguir = input('Digite Sim ou Não para voltar ao início: ').strip().title()
                                 if prosseguir == 'Não':
                                     break
@@ -200,46 +206,57 @@ class Operacoes:
         conta_gerada = False
         while not conta_gerada:
             vincular_cpf = input('Informe o cpf do usuário para vincular a conta: ').strip()
-            match vincular_cpf:
-                case '':
-                    print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
-                case _:
-                    vincular_cpf = int(vincular_cpf)
+            try:
+                vincular_cpf = int(vincular_cpf)
+                match vincular_cpf:
+                    case "":
+                        raise ValueError
+
+            except Exception:
+                print(f'\n{colorir["Vermelho"]}Informação inválida! Tente novamente.{colorir["Fecha_Cor"]}')
+
+            else:
+                cpfs_cadastrados = [usuario.get_cpf() for usuario in self.usuarios_cadastrados]
+                print(cpfs_cadastrados)
+                # for usuario in self.usuarios_cadastrados:
+                #     cpf_usuario = usuario.get_cpf()
+                if vincular_cpf not in cpfs_cadastrados:
+                # if cpf_usuario != vincular_cpf:
+                    print(f'\n{colorir["Vermelho"]}CPF NÃO CADASTRADO! Tente novamente.{colorir["Fecha_Cor"]}')
+
+                elif vincular_cpf in cpfs_cadastrados and len(self.contas_correntes) == 0:
                     for usuario in self.usuarios_cadastrados:
-                        cpf_usuario = usuario.get_cpf()
-
-                        if cpf_usuario != vincular_cpf:
-                            print(f'\n{colorir["Vermelho"]}CPF NÃO CADASTRADO! Tente novamente.{colorir["Fecha_Cor"]}')
-
-                        elif cpf_usuario == vincular_cpf and len(self.contas_correntes) == 0:
-
+                        cpf = usuario.get_cpf()
+                        if cpf == vincular_cpf:
                             conta_corrente=Conta_corrente(1, usuario)
                             self.contas_correntes.append(conta_corrente)
 
-                            for conta in self.contas_correntes:
-                                print(conta)
-                                print(conta.numero_da_conta)
+                    for conta in self.contas_correntes:
+                        print(conta)
+                        print(conta.numero_da_conta)
 
-                            print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
-                            input('Presione qualquer tecla para voltar ao menu...')
+                    print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
+                    input('Presione qualquer tecla para voltar ao menu...')
 
-                            conta_gerada = True
+                    conta_gerada = True
 
-                        elif cpf_usuario == vincular_cpf and len(self.contas_correntes) > 0:
-
+                elif vincular_cpf in cpfs_cadastrados and len(self.contas_correntes) > 0:
+                    for usuario in self.usuarios_cadastrados:
+                        cpf = usuario.get_cpf()
+                        if cpf == vincular_cpf:
                             conta_corrente = Conta_corrente(self.contas_correntes[-1].numero_da_conta+1, usuario)
                             self.contas_correntes.append(conta_corrente)
 
-                            for conta in self.contas_correntes:
-                                print(conta)
-                                print(conta.numero_da_conta)
-                                print(conta.agencia)
-                                print(conta.usuario.nome)
+                    for conta in self.contas_correntes:
+                        print(conta)
+                        print(conta.numero_da_conta)
+                        print(conta.agencia)
+                        print(conta.usuario.nome)
 
-                            print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
-                            input('Presione qualquer tecla para voltar ao menu...')
+                    print(f'\n{colorir["Verde"]}Conta gerada com SUCESSO!{colorir["Fecha_Cor"]}')
+                    input('Presione qualquer tecla para voltar ao menu...')
 
-                            conta_gerada = True
+                    conta_gerada = True
 
 
     def listar_contas(self):
