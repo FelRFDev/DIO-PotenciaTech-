@@ -26,10 +26,6 @@ Para executar o código, é necessário ter SGBD MySql isntalado no seu computad
 - [✅] Insersão dos dados através de comandos SQL.
 - [✅] Retorno de informações através de Querys/Consultas.
 
-<h2 id="Agradecimentos">Agradecimentos</h2>
-
-Agradeço à DIO por proporcionar esta formação e a todos os professores e instrutores que contribuíram para o sucesso deste projeto.
-
 <h2 id="autor">Autor</h2>
 
 Felipe Rodrigues Fonseca:
