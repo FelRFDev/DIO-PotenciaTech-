@@ -1,3 +1,3 @@
 <div align="center">
-<img src="https://github.com/FelRFDev/MyOwn-Projects/assets/89205473/c06ef855-0b44-4862-91fc-2434cb1c7aac"/>
+<img src="https://github.com/FelRFDev/DIO-PotenciaTech-/assets/89205473/c9526aca-9dcb-4db9-9be2-c98fe58f0947)https://github.com/FelRFDev/DIO-PotenciaTech-/assets/89205473/c9526aca-9dcb-4db9-9be2-c98fe58f0947"/>
 </div>
