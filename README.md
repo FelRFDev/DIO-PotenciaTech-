@@ -1,4 +1,4 @@
-<h1 align="center">Bootcamp Potência Tech DIO - Desafio de Projeto 01 Banco de Dados com SQL / MySql</h1>
+<h1 align="center">Bootcamp Potência Tech DIO - Desafio de Projeto 02 Banco de Dados com SQL / MySql</h1>
 
 <div align="center">
 <a href="https://www.dio.me/"><img src="https://hermes.digitalinnovation.one/assets/diome/logo-full.svg" align="center" height="120" width="120" ></a> <br>
@@ -7,12 +7,20 @@
 Este repositório contém o código desenvolvido para o Desafio de Projeto proposto no Bootcamp Potência Tech da DIO.
 <br><br>
 
-Unidade: Construindo seu Primeiro Projeto Lógico de Banco de Dados <br>
+Unidade: Construa um Projeto Lógico de Banco de Dados do Zero. <br>
 
 <h2 id="DesafioDeProjeto">Desafio do projeto</h2>
 
-O objetivo do projeto é replicar a estrutura criada pela instrutora durante a aula no intuito de aplicar o conhecimento obtido durante o curso, e obter uma visão mais ampla
-em relação a um possível cenário de uso por meio da implementação de um modelo e retorno de informações através das consultas.
+O objetivo do projeto é criar do zero um banco de dados utilizando o modelo de Entidade Relacional, para criar o esquema lógico para o contexto de uma oficina mecânica.
+Neste desafio, devemos definir todas as etapas. Desde o esquema até a implementação do banco de dados.
+Em seguida, ao concluir esta etapa, criar queries SQL com as cláusulas abaixo:
+
+* Recuperações simples com SELECT Statement;
+* Filtros com WHERE Statement;
+* Crie expressões para gerar atributos derivados;
+* Defina ordenações dos dados com ORDER BY;
+* Condições de filtros aos grupos – HAVING Statement;
+* Crie junções entre tabelas para fornecer uma perspectiva mais complexa dos dados;
 
 <h3 id="ComoExecutar">Como executar</h3>
 
